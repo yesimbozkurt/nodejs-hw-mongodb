@@ -3,7 +3,8 @@ import pino from 'pino-http';
 import cors from 'cors';
 import { router } from './routers/contacts.js';
 import { env } from './utils/env.js';
-import { getAllContactsController, getContactByIdController } from './controllers/contacts.js';
+import { errorHandler } from './middlewares/errorHandler.js';
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
 
 const PORT = Number(env('PORT', '3000'));
 
@@ -26,28 +27,13 @@ export const setupServer = () => {
             message: 'Hello There!',
         });
     });
+
+    // app.get('/contacts', getAllContactsController);
+    // app.get('/contacts/:contactId', getContactByIdController);
     app.use(router); // Yönlendiriciyi app'e middleware olarak ekliyoruz
+    app.use(notFoundHandler);
+    app.use(errorHandler);
 
-    app.use('*', (req, res) => {
-        res.status(404).json({
-            message: 'Not found',
-        });
-    });
-    app.get('/contacts', getAllContactsController);
-    app.get('/contacts/:contactId', getContactByIdController);
-  
-    app.use((req, res) => {
-        res.status(404).json({
-            message: 'Not found',
-        });
-    });
-
-    app.use((err, req, res) => {
-        res.status(500).json({
-            message: 'Something went wrong',
-            error: err.message,
-        });
-    });
 
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
