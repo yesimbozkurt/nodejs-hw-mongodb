@@ -1,9 +1,10 @@
 import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
-
+import { router } from './routers/contacts.js';
 import { env } from './utils/env.js';
-import { getAllContacts, getContactById } from './services/contacts.js';
+import { getAllContactsController, getContactByIdController } from './controllers/contacts.js';
+
 const PORT = Number(env('PORT', '3000'));
 
 export const setupServer = () => {
@@ -22,37 +23,19 @@ export const setupServer = () => {
 
     app.get('/', (req, res) => {
         res.json({
-            message: 'Hello World!',
+            message: 'Hello There!',
         });
     });
+    app.use(router); // Yönlendiriciyi app'e middleware olarak ekliyoruz
 
-    app.get('/contacts', async (req, res, next) => {
-        try {
-            const contacts = await getAllContacts();
-            res.json({
-                status: 200,
-                message: 'contacts found successfully',
-                data: contacts,
-            });
-        } catch (error) {
-            next(error);
-        }
+    app.use('*', (req, res) => {
+        res.status(404).json({
+            message: 'Not found',
+        });
     });
-
-    app.get('/contacts/:contactId', async (req, res, next) => {
-        try {
-            const { contactId } = req.params;
-            const contact = await getContactById(contactId);
-            res.json({
-                status: 200,
-                message: `Contact with id: ${contactId} found successfully`,
-                data: contact,
-            });
-        } catch (error) {
-            next(error);
-        }
-    });
-
+    app.get('/contacts', getAllContactsController);
+    app.get('/contacts/:contactId', getContactByIdController);
+  
     app.use((req, res) => {
         res.status(404).json({
             message: 'Not found',
