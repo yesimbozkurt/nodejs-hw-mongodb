@@ -1,7 +1,7 @@
 import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
-import { router } from './routers/contacts.js';
+import router from './routers/contacts.js';
 import { env } from './utils/env.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
@@ -28,8 +28,6 @@ export const setupServer = () => {
         });
     });
 
-    // app.get('/contacts', getAllContactsController);
-    // app.get('/contacts/:contactId', getContactByIdController);
     app.use(router); // Yönlendiriciyi app'e middleware olarak ekliyoruz
     app.use(notFoundHandler);
     app.use(errorHandler);

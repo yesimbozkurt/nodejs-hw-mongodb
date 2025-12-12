@@ -4,8 +4,8 @@ export const getAllContacts = async () => {
     const contacts = await ContactsCollection.find({});
     return contacts;
 };
-export const getContactById = async (id) => {
-    const contact = await ContactsCollection.findById(id);
+export const getContactById = async (contactId) => {
+    const contact = await ContactsCollection.findById(contactId);
     return contact;
 };
 
@@ -31,7 +31,7 @@ export const updateContact = async (contactId, payload, options) => {
     if (!rawResult || !rawResult.value) return null;
 
     return {
-        student: rawResult.value,
+        contact: rawResult.value,
         isNew: Boolean(rawResult?.lastErrorObject?.upserted),
     };
 };

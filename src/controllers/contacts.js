@@ -15,14 +15,14 @@ export const getAllContactsController = async (req, res, next) => {
     }
 };
 
-export const getContactByIdController = async (req, res) => {
+export const getContactByIdController = async (req, res, next) => {
     const { contactId } = req.params;
     const contact = await getContactById(contactId);
 
     // Contact bulunamazsa cevap
     if (!contact) {
         // 2. Hata oluşturup ayarlıyoruz
-        throw createHttpError(404, 'Contact not found');
+        next(createHttpError(404, 'Contact not found'));
     }
     // Contact bulunursa cevap
     res.json({
@@ -80,11 +80,11 @@ export const upsertContactController = async (req, res, next) => {
 export const patchContactController = async (req, res, next) => {
     try {
         const { contactId } = req.params;
-        const result = await updateContact(contactId, req.body, { upsert: false });
+        const result = await updateContact(contactId, req.body);
 
-        if (!result) {
-            throw createHttpError(404, 'Contact not found');
-        }
+        // if (!result) {
+        //     throw createHttpError(404, 'Contact not found');
+        // }
 
         res.json({
             status: 200,

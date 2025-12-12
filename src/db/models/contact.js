@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 
 
-const consactsSchema = new Schema(
+const contactsSchema = new Schema(
     {
         name: {
             type: String,
@@ -14,6 +14,7 @@ const consactsSchema = new Schema(
         email: {
             type: String,
             required: false,
+            default: null,
         },
         isFavorite: {
             type: Boolean,
@@ -32,4 +33,4 @@ const consactsSchema = new Schema(
         versionKey: false,
     },
 );
-export const ContactsCollection = model('contacts', consactsSchema);
+export const ContactsCollection = model('contacts', contactsSchema);
