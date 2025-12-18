@@ -22,10 +22,10 @@ const contactsSchema = new Schema(
             default: false,
         },
         contactType: {
-            type: Boolean,
+            type: String,
             required: true,
-            enum: ['personal', 'home', 'work'],
-            default: false,
+            enum: ['personal', 'home', 'work', 'other'],
+            default: 'other',
         },
     },
     {
