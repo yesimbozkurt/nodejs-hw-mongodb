@@ -1,10 +1,13 @@
 import express from 'express';
 import pino from 'pino-http';
 import cors from 'cors';
-import router from './routers/contacts.js';
+import cookieParser from 'cookie-parser';
+// import router from './routers/contacts.js';
 import { env } from './utils/env.js';
+import router from './routers/index.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
+
 
 const PORT = Number(env('PORT', '3000'));
 
@@ -13,6 +16,7 @@ export const setupServer = () => {
 
     app.use(express.json());
     app.use(cors());
+    app.use(cookieParser());
 
     app.use(
         pino({
@@ -28,11 +32,9 @@ export const setupServer = () => {
         });
     });
 
-    app.use("/contacts", router); // Yönlendiriciyi app'e middleware olarak ekliyoruz
+    app.use(router); // Yönlendiriciyi app'e middleware olarak ekliyoruz
     app.use(notFoundHandler);
     app.use(errorHandler);
-
-
     app.listen(PORT, () => {
         console.log(`Server is running on port ${PORT}`);
     });
